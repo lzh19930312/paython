@@ -81,7 +81,7 @@ print('输入用户名:')
 login_user = '109645'
 print('输入密码:')
 # login_passw = input()
-login_passw = 'Luoxiaolu0317'
+login_passw = ''
 url = 'http://ics.chinasoftinc.com/login'
 parmas = {
     'linkpage': 'http://oa.chinasoftinc.com:8888/sso.route?target=L3N5c3RlbS9mcmFtZS80L2luZGV4LmpzcA==',
