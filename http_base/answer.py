@@ -15,16 +15,23 @@ def getAnswer(item):
 
 domain = 'http://xa.chinasoftinc.com'
 
-jessionId = '4E96A94B56B51ABEF91321B255A73787'
+jessionId = '3E5B30EE4D37E0F9AEC7E3BA0465CA85'
 headers = {
     'Cookie': 'JSESSIONID={};'.format(jessionId)
 }
 #examid mtBD6AwXHsFx0sG
 #uniqId nR8egd1416Q8nw0
+
+#OFMHSzeAjsxhJE4
+#JD9mGuGAY8EKN0U
+
+#daxr4A0ygpXETL4
+#qpg5uBlDarq0WTf
+
 data = {
     'action': 'queryResult',
-    'examid': 'rOqwLnvs8fRf0de',
-    'uniqId': 'kxbgr7OeSn43LUg',
+    'examid': 'OFMHSzeAjsxhJE4',
+    'uniqId': 'JD9mGuGAY8EKN0U',
     'userid':'XHY1bTOujJMKGCv'
 }
 answerMap = {'A':'1','B':'2','C':'3','D':'4','E':'5','F':'6','G':'7'}
@@ -34,6 +41,7 @@ result = []
 for item in respJson['root']:
     newItem = {}
     newItem['question'] = item['question']
+    newItem['qanswer'] = item['qanswer']
     newItem['answer'] = getAnswer(item)
     result.append(newItem)
 file = open("F:/Workspaces/anwer_2.json","w+")

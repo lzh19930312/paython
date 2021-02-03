@@ -42,6 +42,6 @@ for answer in answers:
         answer['answer_zh'] = answer_zh
     else:
         answer['answer_zh'] = getFanYi(answer['answer'])
-file = open("F:/Workspaces/anwer_zh_2.json","w+",encoding='utf-8')
+file = open("F:/Workspaces/anwer_zh_2.txt","w+",encoding='utf-8')
 file.write(str(answers))
 file.close()
