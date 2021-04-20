@@ -1,3 +1,5 @@
 chinasofti.iml
 .idea
 *.xlsx
+backend/
+frontend/

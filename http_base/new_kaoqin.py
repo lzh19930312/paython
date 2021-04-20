@@ -4,7 +4,7 @@ import json,time
 
 domain = 'http://ics.chinasoftinc.com:8010/'
 jessionId=''
-userToken='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjdXN0SWQiOiJZQitoWFhUNVhYYWJsYlkzckJQWjZlczFsb25xR05iUWxqeVg0YkFnMzdFV2tDcGYrZFh0ejh4WUR0Tk8vWTlRRWdxT1Vselg1d29VNkFOV2oxT1h3bDA3Ui93Z3ZMd3RKVncxckF4aE9xbW9pMVNRVDFXMVVxN3I5cU9lZEw3NUp5VGVpcGsrWVJKRU1yTEQxNndlRFJGd0FYVWlTQVpjMnVITW5WYmZYQ0E9IiwidXNlcklkIjoiWHpmb0FNYmFNNy9vK1VZcURNbWh2b0k0RUlLVXo2RkVFeXNRM3djd0x6T0JRdHduMFdzcmF2VWRzT1JFUzBibUs4bTVUL01wK2lsN29ybEhyK2xNalFPeHAzMDlWNUg5ZE5La0JtM1g1VzhsT0pJTVI5c3NFZEkvNmV5MkZBanlYTEVkZzlnL1dVZGFlSHI3TlhEL0s2eUgwYkkyTlpub3dkUU1TVXFpaVY0PSIsImVtcElkIjoiYXdUV0VTOGV2SkVVRHB6Z1NGdkp5eHA1QU5GTmVZZTM3NmdjRCtPb0RveDJaSmRKMWJseDVHYWZXWWM5bE5UQkxuVGtuMzlyeDZndHhaQmE0M09Jdmh2a1hiaWY4WEFrWTl5WkxGOEFWMDN6Umpua2ZSckN2N0syNmMraW9WUTBubnE1cVpNS014cGVqUnJwSUsrcXVHditpNkcxUUhhTjdKNW1ZTmpCRzNrPSIsInRva2VuVHlwZSI6ImVtcFdlYiIsInRpbWVzdGFtcCI6MTYxMjI3MjQ3OTY1N30.6EVuUiYBsBnUMkRd2FmfTkG1UpSABFHg1_ChoPBUlX0'
+userToken='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjdXN0SWQiOiJCY0hWYXJMR3Z0VW15RHIxWXZHUUtaQlRxZnNOdlRMazZpcENlSEdnZnFzbWI5UkJ4d29IOGljVjdnYmF0aWlWT0JQM0w4RUdKaXRiaEhBMjNibHRvZm52MmxIc2tzYjdPV0hiRGdYZ0hnMm05MXRZMXNuVHdkV0hRYVlDZVlCbWtLN010azhWUXB2bUVvRDZOTnJDSnl5b3U0YkM3ZXdTb0FnV3VzczJ4dGs9IiwidXNlcklkIjoiaVJ6UC9haXJnUStTQlNoeTZXUnpCcVlLWno0allKWEprZGJpaE9QM0lQOUlITW1Od2dpMkRQYXd5Wml5SE9weWJhUUxsMlU1d0RZVmoycEtNNmVDdnhtck9VSlg3bEFzb0ZrM0k5RFgvTlZKQTlqZFVEd29Oem0yeE5lajNhbHR4S3M3alphTmJxUjlIdjFYQVNya2VyeTBWWE9MaXpERjQ0bDVZZDU4TmY4PSIsImVtcElkIjoiZVZMdHBLTWRXd3JqcmZCSDBIUGJnYVJFTmpMaDl6NGRVVG51czZJQ3gyWVlmR0wxQWI1dzg5REtNMmlMU1RJc1FRVnFhVC9NcnZkZkJLdmdIdDdGNGM2TnBybm9jalloeEpSb0svYUd0YXBEanNCNXkrNFcraWJ4MC9oek9PQ1daL0Q1SzIvMDZGVDhYYkdPcTR6RUVXR01iZ0F4a0NyTm1QdEJyQ1BoemRrPSIsInRva2VuVHlwZSI6ImVtcFdlYiIsInRpbWVzdGFtcCI6MTYxODg0NDY2OTMwOH0.TyklPil-i38q0l7b95yd08V1JF5PsJi_MU7480Emz78'
 headers = {
     #'Cookie': 'JSESSIONID={};UserToken={};'.format(jessionId),
     'token': userToken
@@ -18,8 +18,9 @@ respJson = json.loads(r.text)
 spList = respJson['result']['data']['page']['items']
 print(len(spList))
 for shenpi in spList:
-    if shenpi['applyContent'].find('2021-02-') > -1:
-        continue
+    # if shenpi['applyContent'].find('2021-04-') > -1:
+    #     print("4月份: {} {}".format(shenpi['empName'],shenpi['applyContent']))
+    #     continue
     if shenpi['examSource'] == 19 or shenpi['examSource'] == 3 or shenpi['examSource'] == 1:
         detailRequest = {
             'applyId': shenpi['applyId'],
@@ -38,13 +39,22 @@ for shenpi in spList:
             'remark': shenpi['remark'],
             'state': 1
         }
-        # 判断是否有下一级审批
-        if len(detailResponseJson['result']['data']['stepList']) > 0:
-            #审批通过  0 罗璐 1 邓辉
-            examMan = detailResponseJson['result']['data']['stepList'][0]['deptList'][0]['examManList'][1]
-            if examMan['examManName'] == '邓辉' or examMan['examManName'] == '罗璐':
+        examMan={}
+        stepList=detailResponseJson['result']['data']['stepList']
+        if len(stepList) > 0:
+            deptList=stepList[0]['deptList']
+            if len(deptList) > 0:
+                examManList=deptList[0]['examManList']
+                if len(examManList) == 1:
+                    examMan = examManList[0]
+                elif len(examManList) == 2:
+                    #审批通过  0 罗璐 1 邓辉
+                    examMan = examManList[1]
+        if len(examMan) > 1:
+            if examMan['examManName'] == '邓辉':
                 examStep4MobileRequest['examMans'] = json.dumps([examMan])
             else:
-                break
+                print("下级审批不匹配 {} {}".format(shenpi['empName'],shenpi['applyContent']))
+                continue
         requests.post(domain+'ehr_saas/web/attExamStep/examStep4Mobile.empweb?',data=json.dumps(examStep4MobileRequest), headers=headers)
-        print('{}电子流审批结束, 姓名{} {}'.format(shenpi['examSourceXq'],shenpi['empName'],shenpi['applyContent']))
+        print('{}电子流审批结束 姓名 {} {}'.format(shenpi['examSourceXq'],shenpi['empName'],shenpi['applyContent']))

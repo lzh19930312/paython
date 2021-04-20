@@ -1,30 +1,45 @@
-import requests
+import requests, json, time, math
 from bs4 import BeautifulSoup
-import json,time
+from data_utils import dataUtils
 
 domain = 'http://ics.chinasoftinc.com:8010/'
 jessionId=''
-userToken='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjdXN0SWQiOiJleE5ReTY2MERla2VQcEVDZG82bk9VdUVuTDY3bjRJTksxdmRPalNnTjJFQlNTNzltaEFhQ29RWUkwSWFUNmptczVnaVBQTnlXbkJ5WW1GTGl6NzFlWUJmRkdnQlZRbXVQRXZaenNFb2VFbTlnWEYvQzd2YStINUdLbTN2UGFnMEl6dmRsWTF6L1BNTm4xK0tjS0FYYjFQNVEvaC95T0xBY29JOWhERmFrL2M9IiwidXNlcklkIjoiRXlubi9ialJVcXNaN1Z5MlBIckVYSDI2djRhSHQxNHhNaS81cC8vczltKzZzZEtqVHVPKzJzeEdmNjBqMlUrdGZhTWI0ZjBNb24zYldHRmlVTWtIaldoYitOZGtOcHVOYlhmbjcwNDA5aitvRHVFL0Z1aENWRlNNMUFqcDZDd25jRlVtdGU5WHJseWF1RTFVOUxNRGpMQVRJRExGSmMwck1HVjF2QzZFZWQ0PSIsImVtcElkIjoiTGMyWjNLeEtDb2FEK1dvZnVNTm94czcvSFN1TzVSOGMzN3UrNkdacFJoaFVRMnNDVjAxUWl5U1lzWHNKTU1LK1Q3TXV1ZUdrdnpRL0dha1dhSnJ3SURCZVdENDN1RWJVU1RvelB5L0VKTGRSNHZGcUNWZ1BLY2xPWCtFUkZlT1dHZEdsc2FPQkM0c3JaaVpNZ25qYmFqdEFlU3RSZkJsQ0c0c3JGczRKQmhvPSIsInRva2VuVHlwZSI6ImVtcFdlYiIsInRpbWVzdGFtcCI6MTYwOTczNDg5Mjk1Nn0.ecxO6Gh11u5p1Z7DTcwdk_IukfCivKmffQrhl79l7vw'
+userToken='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjdXN0SWQiOiJQLzVEa3RqTENkSVM5SnI0MW83ZGF5QVFsakluQ3RsN3RzeStxQUtNdno0VmJLdENKU3J2blVreVljMTVJcmtVODNzQzUzRXBDN0YvQVZjRGUvRGJTbTFoWjU4Tnl1MUhpRnRydkhvQXRodktEZTdXUjB2OEJGSDZYNXgxSzhoWWtHbFJMaVd5c29WV281NWxWMWpNNStPN05wTWpKbitpTkhEZFVPQXlCLzQ9IiwidXNlcklkIjoiVVZLME1WTHE1N3ovN2lVbUNmblN4RktuUCtDakZOaSs3K3FwT1M1bUg3Z09yWXFXQTMvUVVtUFMyM1ZCcHppbjBrOUdSRjJ6U0xDMEVVMVBDRkl5MjJsamFoYzdvVXBvOFhoWGZzcjMydmZsNDlNNzM0TXI0U3NmMzBsbVM1NEtBSTJCNlhLWHpNUUh4alpnakpTZHlsdThDSWsyT0R2eVlOWE0rRW1EV2FVPSIsImVtcElkIjoiV2ZZMXU4QnlrMVE1RFNzOFZVVzdlYytkcjdrRkFJcXZDTHBQOEkwMDNYaTRIKzFKN1JSZGxXKzhmSzdPQzlWTmIxLzBnR3pCeERTWjhJbHNwK1JpYVk4YkxKeE5Ua1AxNlR3SWFUSFV6QmdCaUMwNjBzczF3R002L2pjUDRhMGVtbFMvcUlHTGZyRjRUNkpGc2ZDczZjYlU1U2lSUk1KQXZ3T25ZRDUzY3JFPSIsInRva2VuVHlwZSI6ImVtcFdlYiIsInRpbWVzdGFtcCI6MTYxNzE5OTI3ODIwN30.A7VIjgPDJCcsU3aMaSZ0OQK2MaWVwL4EUOId8qdE9cU'
 headers = {
     #'Cookie': 'JSESSIONID={};UserToken={};'.format(jessionId),
-    'token': userToken,
-    'content-type': 'application/json;charset=UTF-8'
+    'token': userToken
 }
-data={
-    'pageIndex':1,
-    'pageSize':50,
-    'search': '{"warnType":"999"}'
-}
-for i in range(1,50):
-    r = requests.post(domain+'ehr_saas/web/syswarning/querySysWarningPages.empweb',data=data, headers=headers)
-    respJson = json.loads(r.text)
-    messageIds = []
-    for item in respJson['result']['data']['page']['items']:
-        messageIds.append(item['wId'])
-    deleteSysMessageUnreadReq = {
-        'messageIds': messageIds
+pageIndex=1
+while True:
+    data={
+        'deptId':'101472',
+        'pageIndex':pageIndex,
+        'pageSize':999,
+        'search': '{"examSourceXq":"公出","approvalStartTime":"2021-03-31","approvalEndTime":"2021-03-31 23:59:59"}'
+        
     }
-    print(json.dumps(deleteSysMessageUnreadReq))
-    dr = requests.post(domain+'ehr_saas/web/syswarning/deleteSysMessageUnread.empweb?',data=json.dumps(deleteSysMessageUnreadReq), headers=headers)
-    print(dr.text)
-    print('{}-{} done'.format(50 * (i-1),50 * i))
+    r = requests.post(domain+'ehr_saas/web/attExamStep/getAttExamStepHistoryMyselfPage.empweb?',data=data, headers=headers)
+    respJson = json.loads(r.text)
+    spList = respJson['result']['data']['page']['items']
+    pageTotal = respJson['result']['data']['page']['pageTotal']
+    for shenpi in spList:
+        #if shenpi['state'] == 3:
+        #    break
+        applyContent = shenpi['applyContent']
+        sj = applyContent.split('<br/>')
+        sjkssj = (sj[0].split('：'))[1]
+        sjjssj = (sj[1].split('：'))[1]
+        sjts = (sj[2].split('：'))[1]
+        result = dataUtils.getOneDayHours(sjkssj, sjjssj)
+        if result == '':
+            result = sjts
+        statusStr = '通过'
+        print('{}*{}*{}*{}*{}*{}'.format(shenpi['examSourceXq'],shenpi['empName'],sjkssj, sjjssj,result,statusStr))
+    if pageIndex == pageTotal:
+        print('last page End')
+        break
+    if pageTotal > 1:
+        pageIndex = pageIndex + 1
+    else:
+        print('only 1 page End')
+        break

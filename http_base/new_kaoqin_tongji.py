@@ -4,7 +4,7 @@ from data_utils import dataUtils
 
 domain = 'http://ics.chinasoftinc.com:8010/'
 jessionId=''
-userToken='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjdXN0SWQiOiJRcnAzVkFodFFMaSs5dnZPYXoySzc2SUpuNlZhRDhGU29qTnFURnNxelZxY25EVTZlSkxVd0VmbDhJVjg4cHBYTCt3d1BHVkxISlhvRWh0Wm1VTE9nUUZvRFFpaXMwMWI4amVKZHNFTUlmc1JVejJQOFFoY0RnbVdNMUZGSEg0MlQyVjhOdDR6OCsyY0k0ZzRtZ2FxU3F2UlBNS2pkT0I4YTV5YWIwK1JVVXM9IiwidXNlcklkIjoiZ3pDUFExRVF0UGZpbnhXNDdhN0czL2sxNHpLeTI4VDdyb28vOFZ1cDJpbFEwSXN5eWZnbmZ3N2JZR3lsK0ZoQ04rV3NBNE41YnJHdXVlSWtXdXNUSkYzOE83S0JUdEJ2ZU4raHBhd2FudFl6WlUyMVhIOGQvTUpsSWg0S2I4MmxxSDNPRXlZd3ZvK0YrM0taZGFpQ3Qrb3hoSk15cEllQ3doTjVQY3RiY2JZPSIsImVtcElkIjoiUmJaS1hJdGpib0Y1ZldUalFBajNIOE10ZnlWbU9Mc1hHWXNOMnFQREdGQWdsVk9tNzFjOHBzTUlraWRiRzJ3L2pWZjZmYlNHNlhQb3piakJPRVVML20xT2FzRzlMMldQdEtiTVpseDEyRzZ2VDlreXZXNlNFN0grQlB4MFk3RUp1Nk04ckJCVlpNZTZiTk43SGtjUGxia1VnZ0xCNkVXNW1EVjQzeGlSZXBJPSIsInRva2VuVHlwZSI6ImVtcFdlYiIsInRpbWVzdGFtcCI6MTYxMDM3NjAxODg3Nn0.d2eBUdIu1i59QbECFDyMC6b-yt3MN_xQPPWvZokvUhA'
+userToken='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjdXN0SWQiOiJQLzVEa3RqTENkSVM5SnI0MW83ZGF5QVFsakluQ3RsN3RzeStxQUtNdno0VmJLdENKU3J2blVreVljMTVJcmtVODNzQzUzRXBDN0YvQVZjRGUvRGJTbTFoWjU4Tnl1MUhpRnRydkhvQXRodktEZTdXUjB2OEJGSDZYNXgxSzhoWWtHbFJMaVd5c29WV281NWxWMWpNNStPN05wTWpKbitpTkhEZFVPQXlCLzQ9IiwidXNlcklkIjoiVVZLME1WTHE1N3ovN2lVbUNmblN4RktuUCtDakZOaSs3K3FwT1M1bUg3Z09yWXFXQTMvUVVtUFMyM1ZCcHppbjBrOUdSRjJ6U0xDMEVVMVBDRkl5MjJsamFoYzdvVXBvOFhoWGZzcjMydmZsNDlNNzM0TXI0U3NmMzBsbVM1NEtBSTJCNlhLWHpNUUh4alpnakpTZHlsdThDSWsyT0R2eVlOWE0rRW1EV2FVPSIsImVtcElkIjoiV2ZZMXU4QnlrMVE1RFNzOFZVVzdlYytkcjdrRkFJcXZDTHBQOEkwMDNYaTRIKzFKN1JSZGxXKzhmSzdPQzlWTmIxLzBnR3pCeERTWjhJbHNwK1JpYVk4YkxKeE5Ua1AxNlR3SWFUSFV6QmdCaUMwNjBzczF3R002L2pjUDRhMGVtbFMvcUlHTGZyRjRUNkpGc2ZDczZjYlU1U2lSUk1KQXZ3T25ZRDUzY3JFPSIsInRva2VuVHlwZSI6ImVtcFdlYiIsInRpbWVzdGFtcCI6MTYxNzE5OTI3ODIwN30.A7VIjgPDJCcsU3aMaSZ0OQK2MaWVwL4EUOId8qdE9cU'
 headers = {
     #'Cookie': 'JSESSIONID={};UserToken={};'.format(jessionId),
     'token': userToken
@@ -14,7 +14,9 @@ while True:
     data={
         'deptId':'101472',
         'pageIndex':pageIndex,
-        'pageSize':999
+        'pageSize':999,
+        'search': '{"approvalStartTime":"2021-03-30","approvalEndTime":"2021-03-30 23:59:59"}'
+        
     }
     r = requests.post(domain+'ehr_saas/web/attExamStep/getAttExamStepHistoryMyselfPage.empweb?',data=data, headers=headers)
     respJson = json.loads(r.text)
@@ -24,7 +26,7 @@ while True:
         #if shenpi['state'] == 3:
         #    break
         applyContent = shenpi['applyContent']
-        if (shenpi['examSourceXq'].find('假') > -1 or shenpi['examSourceXq'].find('休') > -1) and applyContent.find('2020-12') > -1:
+        if (shenpi['examSourceXq'].find('假') > -1 or shenpi['examSourceXq'].find('休') > -1) and applyContent.find('2021-03') > -1:
             sj = applyContent.split('<br/>')
             sjkssj = (sj[0].split('：'))[1]
             sjjssj = (sj[1].split('：'))[1]
