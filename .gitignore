@@ -3,3 +3,6 @@ chinasofti.iml
 *.xlsx
 backend/
 frontend/
+txt/
+log/
+*pycache_*
