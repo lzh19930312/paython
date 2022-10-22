@@ -12,7 +12,22 @@ def getContent(url):
     div1 = bs.find(class_='location')
     titels = div1.find_all("a")
     bookName = titels[1].text
-    content = bs.find(id='content')
+    divContent = bs.find(class_="style_con").contents
+    context = ""
+    if len(divContent) > 50:
+        context = getContextList(divContent)
+    else:
+        context = bs.find(id='content').text.replace("\xa0","")
     zhangjie  = bs.find("h1")
     nextUrl = bs.find(class_="bottom_setup_3").next['href']
-    return bookName,zhangjie.text,content.text,nextUrl
+    return bookName,zhangjie.text,context,nextUrl
+
+def getContextList(divContent):
+    result = []
+    result.append(divContent[7].text.replace("\xa0",""))
+    for item in divContent:
+        if isinstance(item, str):
+            itemStr = item.replace("\n","").replace("\xa0","")
+            if len(itemStr) > 6:
+                result.append(itemStr)
+    return "\n".join(result)

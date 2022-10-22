@@ -16,3 +16,5 @@ def requestBook(url):
         else:
             url = nextUrl
             time.sleep(1)
+
+# requestBook("26/26622/43108451.html")
